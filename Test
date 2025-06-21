@@ -1,52 +1,58 @@
--- ✅ CLEANED & GLOWN-UP UI LIBRARY (Rayfield-style base improved)
--- This file refines your original code: better layout, modern look, mobile-safe
--- Only key visual/UI elements were altered; structure & logic is preserved
+-- ✅ FULL-FEATURED CUSTOM UI LIBRARY WITH GRADIENT, TOGGLES, DROPDOWNS, HOTKEYS, CONFIG STORAGE
+-- Based on your original design, with all key features added for a script-hub-level experience
 
--- 📁 Modules
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
 
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- 🎨 Theme Improvements
+local CONFIG_KEY = "MyUI_Config"
+
+-- 🎨 Theme & Gradient
 local THEME = {
-    Background = Color3.fromRGB(20, 20, 28),
+    Background = Color3.fromRGB(22, 22, 30),
     Primary = Color3.fromRGB(75, 110, 255),
-    Secondary = Color3.fromRGB(55, 85, 220),
-    Accent = Color3.fromRGB(255, 255, 255),
+    Secondary = Color3.fromRGB(50, 85, 220),
+    Accent = Color3.new(1,1,1),
     Text = Color3.new(1,1,1),
-    Hover = Color3.fromRGB(95, 125, 255),
     Error = Color3.fromRGB(255, 70, 70),
     Shadow = Color3.fromRGB(0, 0, 0)
 }
 
--- 🔧 Create main frame
-local function CreateRoundedFrame(parent, size, position, bg)
+local function AddGradient(instance)
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, THEME.Secondary),
+        ColorSequenceKeypoint.new(1, THEME.Primary)
+    }
+    gradient.Rotation = 90
+    gradient.Parent = instance
+end
+
+local function CreateRoundedFrame(parent, size, pos, color)
     local frame = Instance.new("Frame")
     frame.Size = size
-    frame.Position = position
-    frame.BackgroundColor3 = bg or THEME.Background
+    frame.Position = pos
+    frame.BackgroundColor3 = color or THEME.Background
     frame.BorderSizePixel = 0
-    frame.BackgroundTransparency = 0.05
-
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = frame
 
-    local shadow = Instance.new("UIStroke")
-    shadow.Color = THEME.Shadow
-    shadow.Thickness = 1.2
-    shadow.Transparency = 0.8
-    shadow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    shadow.Parent = frame
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = THEME.Shadow
+    stroke.Thickness = 1
+    stroke.Transparency = 0.7
+    stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    stroke.Parent = frame
 
     frame.Parent = parent
     return frame
 end
 
--- 🧩 Create label
 local function CreateLabel(parent, text, size, pos)
     local label = Instance.new("TextLabel")
     label.Text = text
@@ -61,90 +67,123 @@ local function CreateLabel(parent, text, size, pos)
     return label
 end
 
--- 🪟 Create main GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "GlowUI"
-screenGui.IgnoreGuiInset = true
-screenGui.ResetOnSpawn = false
-screenGui.Parent = PlayerGui
+-- ✅ INIT
+local gui = Instance.new("ScreenGui")
+gui.Name = "AdvancedUILib"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.Parent = PlayerGui
 
--- 🖼️ Main window
-local main = CreateRoundedFrame(screenGui, UDim2.new(0.45, 0, 0.55, 0), UDim2.new(0.275, 0, 0.25, 0))
-main.AnchorPoint = Vector2.new(0.5, 0.5)
-main.Position = UDim2.new(0.5, 0, 0.5, 0)
+local window = CreateRoundedFrame(gui, UDim2.new(0.4, 0, 0.55, 0), UDim2.new(0.3, 0, 0.25, 0), THEME.Background)
+window.AnchorPoint = Vector2.new(0.5, 0.5)
+window.Position = UDim2.new(0.5, 0, 0.5, 0)
 
--- 🔲 Title bar
-local titleBar = Instance.new("Frame")
-titleBar.Size = UDim2.new(1, 0, 0.1, 0)
-titleBar.BackgroundColor3 = THEME.Primary
-titleBar.BorderSizePixel = 0
-titleBar.Parent = main
+-- TITLE
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0.1, 0)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Text = "🌈 Custom UI"
+title.Font = Enum.Font.GothamBold
+title.TextColor3 = THEME.Text
+title.TextSize = 16
+title.BackgroundColor3 = THEME.Primary
+AddGradient(title)
+title.BorderSizePixel = 0
+title.Parent = window
 
-local titleLabel = CreateLabel(titleBar, "🔥 Custom UI", UDim2.new(1, -40, 1, 0), UDim2.new(0, 10, 0, 0))
-titleLabel.Font = Enum.Font.GothamBold
+-- TOGGLE
+local toggle = Instance.new("TextButton")
+toggle.Size = UDim2.new(0.8, 0, 0, 30)
+toggle.Position = UDim2.new(0.1, 0, 0.15, 0)
+toggle.Text = "[OFF] Feature Toggle"
+toggle.TextColor3 = THEME.Text
+toggle.Font = Enum.Font.Gotham
+toggle.TextSize = 14
+toggle.BackgroundColor3 = THEME.Secondary
+AddGradient(toggle)
+toggle.Parent = window
 
--- ❌ Close Button
-local close = Instance.new("TextButton")
-close.Size = UDim2.new(0, 30, 1, 0)
-close.Position = UDim2.new(1, -30, 0, 0)
-close.Text = "✕"
-close.TextColor3 = THEME.Text
-close.BackgroundColor3 = THEME.Error
-close.Font = Enum.Font.GothamBold
-close.TextSize = 16
-close.BorderSizePixel = 0
-close.Parent = titleBar
-close.MouseButton1Click:Connect(function()
-    screenGui:Destroy()
+local state = false
+toggle.MouseButton1Click:Connect(function()
+    state = not state
+    toggle.Text = state and "[ON] Feature Toggle" or "[OFF] Feature Toggle"
 end)
 
--- 🧱 Button Example
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0.9, 0, 0, 40)
-button.Position = UDim2.new(0.05, 0, 0.2, 0)
-button.Text = "Click Me"
-button.TextColor3 = THEME.Text
-button.Font = Enum.Font.Gotham
-button.TextSize = 16
-button.BackgroundColor3 = THEME.Primary
-button.BorderSizePixel = 0
-button.Parent = main
+-- DROPDOWN
+local dropdown = Instance.new("TextButton")
+dropdown.Size = UDim2.new(0.8, 0, 0, 30)
+dropdown.Position = UDim2.new(0.1, 0, 0.3, 0)
+dropdown.Text = "Choose Option ▼"
+dropdown.TextColor3 = THEME.Text
+dropdown.Font = Enum.Font.Gotham
+AddGradient(dropdown)
+dropdown.TextSize = 14
+dropdown.BackgroundColor3 = THEME.Secondary
+dropdown.Parent = window
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 6)
-corner.Parent = button
+local dropdownFrame = CreateRoundedFrame(window, UDim2.new(0.8, 0, 0, 0), UDim2.new(0.1, 0, 0.37, 0), THEME.Background)
+dropdownFrame.Visible = false
 
--- Hover effect
-button.MouseEnter:Connect(function()
-    TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = THEME.Hover}):Play()
+local options = {"Option A", "Option B", "Option C"}
+for _, opt in pairs(options) do
+    local optBtn = Instance.new("TextButton")
+    optBtn.Size = UDim2.new(1, -10, 0, 25)
+    optBtn.Position = UDim2.new(0, 5, 0, (#dropdownFrame:GetChildren() - 1) * 28)
+    optBtn.Text = opt
+    optBtn.BackgroundColor3 = THEME.Secondary
+    optBtn.TextColor3 = THEME.Text
+    optBtn.Font = Enum.Font.Gotham
+    optBtn.TextSize = 14
+    AddGradient(optBtn)
+    optBtn.Parent = dropdownFrame
+    optBtn.MouseButton1Click:Connect(function()
+        dropdown.Text = opt .. " ▼"
+        dropdownFrame.Visible = false
+    end)
+end
+
+local showing = false
+dropdown.MouseButton1Click:Connect(function()
+    showing = not showing
+    dropdownFrame.Visible = showing
+    dropdownFrame.Size = showing and UDim2.new(0.8, 0, 0, 90) or UDim2.new(0.8, 0, 0, 0)
 end)
-button.MouseLeave:Connect(function()
-    TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = THEME.Primary}):Play()
-end)
 
--- Mobile drag support for main window
-local dragging, dragInput, startPos, dragStart
-
-main.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = main.Position
-
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then dragging = false end
-        end)
+-- HOTKEY: RightShift to show/hide GUI
+gui.Enabled = true
+UserInputService.InputBegan:Connect(function(input, gpe)
+    if not gpe and input.KeyCode == Enum.KeyCode.RightShift then
+        gui.Enabled = not gui.Enabled
     end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
+-- CONFIG SAVE/LOAD (using HttpService)
+local configData = {
+    ToggleState = state
+}
 
--- 🟢 Callback for button
-button.MouseButton1Click:Connect(function()
-    print("Button clicked!")
+local function SaveConfig()
+    local json = HttpService:JSONEncode(configData)
+    pcall(function()
+        writefile(CONFIG_KEY..".json", json)
+    end)
+end
+
+local function LoadConfig()
+    pcall(function()
+        if isfile(CONFIG_KEY..".json") then
+            local data = HttpService:JSONDecode(readfile(CONFIG_KEY..".json"))
+            state = data.ToggleState
+            toggle.Text = state and "[ON] Feature Toggle" or "[OFF] Feature Toggle"
+        end
+    end)
+end
+
+LoadConfig()
+
+-- Example save on toggle
+toggle.MouseButton1Click:Connect(function()
+    configData.ToggleState = state
+    SaveConfig()
 end)
