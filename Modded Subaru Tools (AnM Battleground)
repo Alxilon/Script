@@ -1,0 +1,107 @@
+local player = game.Players.LocalPlayer
+
+local Greg = Instance.new("Folder")
+Greg.Name = "Greg"
+Greg.Parent = workspace
+
+local first = player.Backpack:FindFirstChild("Shamac")
+if first then
+	first.Parent = Greg
+end
+
+local second = player.Backpack:FindFirstChild("Rental Goa")
+if second then
+	second.Parent = Greg
+end
+
+local third = player.Backpack:FindFirstChild("REMM !")
+if third then
+	third.Parent = Greg
+end
+
+local fourth = player.Backpack:FindFirstChild('"I can return from death"')
+if fourth then
+	fourth.Parent = Greg
+end
+
+local fifth = player.Backpack:FindFirstChild("Reinhard !!")
+if fifth then
+	fifth.Parent = Greg
+end
+
+local sixth = player.Backpack:FindFirstChild("Return By Death")
+if sixth then
+	sixth.Parent = Greg
+end
+
+local tool1 = Instance.new("Tool")
+tool1.Name = "Modded Shamac"
+tool1.RequiresHandle = false
+tool1.CanBeDropped = false
+tool1.Parent = player.Backpack
+
+tool1.Activated:Connect(function()
+	for i = 1, 1 do --Configuration change the 1 before do to spam
+		Greg:FindFirstChild("Shamac").LocalScript.Event:FireServer()
+	end
+end)
+
+local tool2 = Instance.new("Tool")
+tool2.Name = "Modded Rental Goa"
+tool2.RequiresHandle = false
+tool2.CanBeDropped = false
+tool2.Parent = player.Backpack
+
+tool2.Activated:Connect(function()
+	for i = 1, 1 do --Configuration change the 1 before do to spam
+		Greg:FindFirstChild("Rental Goa").LocalScript.Event:FireServer()
+	end
+end)
+
+local tool3 = Instance.new("Tool")
+tool3.Name = "Modded REMM !"
+tool3.RequiresHandle = false
+tool3.CanBeDropped = false
+tool3.Parent = player.Backpack
+
+tool3.Activated:Connect(function()
+	for i = 1, 1 do --Configuration change the 1 before do to spam
+		Greg:FindFirstChild("REMM !").LocalScript.Event:FireServer()
+	end
+end)
+
+local tool4 = Instance.new("Tool")
+tool4.Name = "Modded I can return from death"
+tool4.RequiresHandle = false
+tool4.CanBeDropped = false
+tool4.Parent = player.Backpack
+
+tool4.Activated:Connect(function()
+	for i = 1, 1 do --Configuration change the 1 before do to spam
+		Greg:FindFirstChild('"I can return from death"').LocalScript.Event:FireServer()
+	end
+end)
+
+local tool5 = Instance.new("Tool")
+tool5.Name = "Modded Reinhard !!"
+tool5.RequiresHandle = false
+tool5.CanBeDropped = false
+tool5.Parent = player.Backpack
+
+tool5.Activated:Connect(function()
+	for i = 1, 1 do --Configuration change the 1 before do to spam
+		Greg:FindFirstChild("Reinhard !!").LocalScript.Event:FireServer()
+	end
+end)
+
+local tool6 = Instance.new("Tool")
+tool6.Name = "Modded Return By Death"
+tool6.RequiresHandle = false
+tool6.CanBeDropped = false
+tool6.Parent = player.Backpack
+
+tool6.Activated:Connect(function()
+	for i = 1, 1 do --Configuration change the 1 before do to spam
+		Greg:FindFirstChild("Return By Death").LocalScript.Event:FireServer()
+	end
+end)
